@@ -127,8 +127,8 @@ class ProblemController extends Controller
                 $form->html("<div class=\"alert alert-danger\" role=\"alert\">您不必在意文件名和后缀，系统将自动为您重命名。但请上传结束后检查一下文件是否成功上传，缺失输入或输出数据会导致评测机异常</div>");
                 $form->hasMany('test_cases','测试用例',function ($form){
                     $problem_id=$form->getForm()->model()->id;
-                    $form->file('input','用例输入')->move('test_case/problem/'.$problem_id)->options([ 'showPreview' => false]);//->rules('required');
-                    $form->file('output','用例输出')->move('test_case/problem/'.$problem_id)->options([ 'showPreview' => false]);//->rules('required');
+                    $form->file('input','用例输入')->move('test_case/problem/'.$problem_id)->options([ 'showPreview' => false])->name(uniqid());
+                    $form->file('output','用例输出')->move('test_case/problem/'.$problem_id)->options([ 'showPreview' => false])->name(uniqid());
                     $form->number('score','分数')->default(1);
                 });
             })->tab('其他设置',function ($form){
