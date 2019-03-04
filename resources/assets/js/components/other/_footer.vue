@@ -3,9 +3,10 @@
         <br>
         <div>
             <small>Minnan Normal University Online Judge System 2.0 Beta</small>
+            <p>闽ICP备18023108号-1</p>
         </div>
         <div>
-            <small><a href="https://gitee.com/yanchenqiang/MnnuacmOnlineJudgeSystem">Power By MOJ Project</a></small>
+            <small><a href="https://github.com/ycq3/MOJ">Power By MOJ Project</a></small>
         </div>
         <br>
 

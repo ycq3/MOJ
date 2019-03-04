@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="col-sm-8 offset-sm-2">
+  <div id="app">
     <Head></Head>
 
     <transition name="slide-fade">
