@@ -110,7 +110,7 @@ class PassportServices
                 return $this->failed(['nickname' => '注册信息中包含非法内容！']);
             }
 
-            if(!$this->text_censor($quote)){
+            if($quote!=null&&$quote!=''&&!$this->text_censor($quote)){
                 return $this->failed(['quote' => '注册信息中包含非法内容！']);
             }
 

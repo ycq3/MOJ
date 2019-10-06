@@ -17,6 +17,9 @@ class ProblemDetail extends Model
 
     public function getLanguageAttribute($value)
     {
+        if(!str_contains($value,',')){
+            return [];
+        }
         return explode(',', $value);
     }
 

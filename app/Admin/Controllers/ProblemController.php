@@ -14,6 +14,7 @@ use App\Model\Syslanguage;
 use App\Model\Tag;
 use function config;
 use Encore\Admin\Form;
+use Encore\Admin\Form\NestedForm;
 use Encore\Admin\Grid;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
@@ -108,7 +109,7 @@ class ProblemController extends Controller
     protected function form()
     {
         return Admin::form(Problem::class, function (Form $form) {
-            $form->tab('基本设置', function ($form) {
+            $form->tab('基本设置', function (Form $form) {
                 $form->display('id', 'ID');
                 $form->text('title', '题目');
                 $form->editor('detail.describe', '题目描述');
@@ -117,7 +118,7 @@ class ProblemController extends Controller
                 $form->textarea('detail.sampleinput','输入样例');
                 $form->textarea('detail.sampleoutput','输出样例');
                 $form->textarea('detail.hint', '提示');
-            })->tab('测试用例测试', function ($form) {
+            })->tab('测试用例测试', function (Form $form) {
                 $form->number('detail.time','C++时间限制')->default(1000);
                 $form->number('detail.memory','C++内存限制')->default(256);
                 $form->number('detail.other_time','其他语言时间限制')->default(2000);
@@ -125,17 +126,31 @@ class ProblemController extends Controller
                 $option=config('mnnuoj.language');
                 $form->multipleSelect('detail.language','语言设置')->options($option)->help('为空则支持所有语言');
                 $form->html("<div class=\"alert alert-danger\" role=\"alert\">您不必在意文件名和后缀，系统将自动为您重命名。但请上传结束后检查一下文件是否成功上传，缺失输入或输出数据会导致评测机异常</div>");
-                $form->hasMany('test_cases','测试用例',function ($form){
+                $form->hasMany('test_cases','测试用例',function (NestedForm $form){
                     $problem_id=$form->getForm()->model()->id;
-                    $form->file('input','用例输入')->move('test_case/problem/'.$problem_id)->options([ 'showPreview' => false])->name(uniqid().'.in');
-                    $form->file('output','用例输出')->move('test_case/problem/'.$problem_id)->options([ 'showPreview' => false])->name(uniqid().'.out');
+                    $uid=uniqid().uniqid();
+                    $form->file('input','用例输入')->move('test_case/problem/'.$problem_id)->options([ 'showPreview' => false])->name($uid.'.in');
+                    $form->file('output','用例输出')->move('test_case/problem/'.$problem_id)->options([ 'showPreview' => false])->name($uid.'.out');
                     $form->number('score','分数')->default(1);
                 });
-            })->tab('其他设置',function ($form){
+            })->tab('其他设置',function (Form $form){
                 $form->slider('difficulty','难度')->options(['max' => 5, 'min' => 1, 'step' => 1]);
                 $form->listbox('tag','问题分类')->options(Tag::all()->pluck('name','id'));
                 $form->text('detail.source','题目来源');
+                //$id=$form->model()->id;
+                //$url=route('problem.check_testcase',$id);
+                //$form->html("<a href='{$url}'>测试数据校验信息</a>");
             });
         });
+    }
+
+    public function check_testcase($id){
+        $testcase=Problem::find($id)->test_cases;
+        foreach ($testcase as $item){
+            echo '文件名'.$item->input.'文件大小'.Storage::disk('admin')->getSize($item->input).'KB';
+            echo "<br/>";
+            echo '文件名'.$item->input.'文件大小'.Storage::disk('admin')->getSize($item->output).'KB';
+            echo "<br/>";
+        }
     }
 }

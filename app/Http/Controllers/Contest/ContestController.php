@@ -333,7 +333,7 @@ class ContestController extends Controller
             $start_time = $contest->start_time;
             $end_time=$contest->end_time;
             //优化Rank
-            ProblemSubmit::where([['contest_id', $cid],['']])->chunk(50, function ($submit) use ($rank, $id_map, &$ak) {
+            ProblemSubmit::where('contest_id',$cid)->whereBetween('created_at',[$contest->start_time,$contest->end_time])->chunk(50, function ($submit) use ($rank, $id_map, &$ak) {
                 foreach ($submit as $item) {
                     //去除未评测结果
                     if ($item->result == RunResult::$OJ_WT0 ||

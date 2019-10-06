@@ -82,7 +82,7 @@ class JudgeController extends Controller
     protected function grid()
     {
         return Admin::grid(ProblemSubmit::class, function (Grid $grid) {
-
+            $grid->model()->orderBy('id', 'desc');
             $grid->id('ID')->sortable();
             $grid->problem_id('问题ID');
             $grid->column('用户ID/用户名')->display(function (){
@@ -92,7 +92,8 @@ class JudgeController extends Controller
                 return $this->contest?$this->contest->id.'/'.$this->contest->title:'';
             });
             $grid->column('问题ID/名称')->display(function(){
-               return $this->problem->id.'/'.$this->problem->title;
+                $url=route('problem.edit',$this->problem->id);
+                return "<a href='{$url}'>{$this->problem->id}/{$this->problem->title}</a>";
             });
             $grid->result('结果')->editable('select', RunResult::$result);;
             $grid->created_at('提交时间');
@@ -145,6 +146,7 @@ class JudgeController extends Controller
             $form->display('id', 'ID');
             $form->display('created_at', '提交时间');
             $form->display('updated_at', '结果更新时间');
+            $form->select('language','语言')->options(config('mnnuoj.language'));
             $form->select('result','结果')->options(RunResult::$result);
             $form->textarea('code','代码');
             $form->textarea('error','错误日志');

@@ -13,6 +13,7 @@ Route::group([
     $router->get('/', 'HomeController@index');
     $router->resource('user', UserController::class);//用户管理
     $router->resource('problem',ProblemController::class);//问题管理
+    $router->get('problem/check_testcase/{id}','ProblemController@check_testcase')->name('problem.check_testcase');
     $router->resource('problem_tag',ProblemTagController::class);//问题分类管理
     $router->resource('contest',ContestController::class);//比赛管理
     $router->resource('exam',ExamController::class);//考试管理

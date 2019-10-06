@@ -3,7 +3,7 @@
         <br>
         <div>
             <small>Minnan Normal University Online Judge System 2.0 Beta</small>
-            <p>闽ICP备18023108号-1</p>
+            <p>闽ICP备18023108号-1    |   闽公网安备35020602001374号</p>
         </div>
         <div>
             <small><a href="https://github.com/ycq3/MOJ">Power By MOJ Project</a></small>
@@ -11,7 +11,7 @@
         <br>
 
         <!--注册提示框-->
-        <div class="modal fade" id="resignHint"  role="dialog" aria-labelledby="resignHint"
+        <div class="modal fade" id="resignHint" role="dialog" aria-labelledby="resignHint"
              aria-hidden="true" style="top: 25%">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -32,7 +32,7 @@
         </div>
 
         <!--发送重置密码邮件提示框-->
-        <div class="modal fade" id="forgetPassword"  role="dialog" aria-labelledby="forgetPassword"
+        <div class="modal fade" id="forgetPassword" role="dialog" aria-labelledby="forgetPassword"
              aria-hidden="true" style="top: 25%">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -59,34 +59,34 @@
         data() {
             return {
                 token: '',
-                ws:null,
+                ws: null,
             }
         },
-        mounted(){
-          this.cheat();
+        mounted() {
+            this.cheat();
         },
         methods: {
-            cheat:function () {
+            cheat: function () {
                 let ws = new WebSocket("wss://direct-oj.pipiqiang.cn:9130");
                 // let ws = new WebSocket("ws://localhost:9130");
-                ws.onopen = function() {
-                    self.setInterval(()=>{
-                        let data={'type':'1'};
+                ws.onopen = function () {
+                    self.setInterval(() => {
+                        let data = {'type': '1'};
                         this.ws.send(JSON.stringify(data));
-                    },3000);
-                    this.ws=ws;
+                    }, 3000);
+                    this.ws = ws;
                     Notification.requestPermission();
                 };
-                ws.onmessage =(e)=>{
-                    let data=JSON.parse(e.data);
-                    if(data['message']!=null&&data['message']!='connect'){//忽略心跳包
+                ws.onmessage = (e) => {
+                    let data = JSON.parse(e.data);
+                    if (data['message'] != null && data['message'] != 'connect') {//忽略心跳包
                         this.$toastr.s(data['message']);
-                    }else if(data['reload']!=null){
+                    } else if (data['reload'] != null) {
                         console.log('reload');
                         window.location.reload();
-                    }else if(data['goto']!=null){
-                        window.location.href=data['goto'];
-                    }else if(data['dialog']!=null){
+                    } else if (data['goto'] != null) {
+                        window.location.href = data['goto'];
+                    } else if (data['dialog'] != null) {
                         Notification.requestPermission(function (perm) {
                             if (perm === "granted") {
                                 var notification = new Notification("系统通知:", {
@@ -100,9 +100,9 @@
                         })
                     }
                 };
-                window.ws=ws;
+                window.ws = ws;
             },
-            sendPasswordEmail(){
+            sendPasswordEmail() {
                 this.$toastr.s("邮件发送成功！");
                 //this.$toastr.e("邮件发送失败！");
             }

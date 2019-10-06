@@ -84,6 +84,7 @@ class ContestController extends Controller
     {
         return Admin::grid(Contest::class, function (Grid $grid) {
 
+            $grid->model()->orderBy('id', 'desc');
             $grid->exporter(new ExcelExpoter());
 
             $grid->id('ID')->sortable();
@@ -161,10 +162,10 @@ class ContestController extends Controller
                 ];
             });
         }else{
-            return ProblemTag::with('problem')->get()->map(function ($item){
+            return Problem::all()->map(function ($item){
                 return [
-                    'id'=>$item->problem->id,
-                    'text'=>$item->problem->title.'-'.$item->problem->difficulty
+                    'id'=>$item->id,
+                    'text'=>$item->id.'-'.$item->title.'-难度:'.$item->difficulty
                 ];
             });
         }
